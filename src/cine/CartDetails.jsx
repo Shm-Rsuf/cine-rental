@@ -7,15 +7,17 @@ import { getImageUrl } from "../utils/cine-utility";
 
 /* eslint-disable react/prop-types */
 const CartDetails = ({ onClose }) => {
-  const { cartData, setCartData } = useContext(MovieContext);
-  console.log(cartData);
+  const { state, dispatch } = useContext(MovieContext);
+  console.log(state.cartData);
 
   /* handleRemoveCart */
-  const handleRemoveCart = (event, itemId) => {
+  const handleRemoveCart = (event, item) => {
     event.preventDefault();
 
-    const filteredItem = cartData.filter((item) => item.id !== itemId);
-    setCartData([...filteredItem]);
+    dispatch({
+      type: "REMOVE_FROM_CART",
+      payload: item,
+    });
   };
 
   return (
@@ -26,10 +28,10 @@ const CartDetails = ({ onClose }) => {
             Your Carts
           </h2>
           <div className='space-y-8 lg:space-y-12 max-h-[450px] overflow-auto mb-10 lg:mb-14'>
-            {cartData.length === 0 ? (
+            {state.cartData.length === 0 ? (
               <p className='text-2xl'>Your cart is empty</p>
             ) : (
-              cartData.map((item) => (
+              state.cartData.map((item) => (
                 <div key={item.id} className='grid grid-cols-[1fr_auto] gap-4'>
                   <div className='flex items-center gap-4'>
                     <img
@@ -51,7 +53,7 @@ const CartDetails = ({ onClose }) => {
                   </div>
                   <div className='flex justify-between gap-4 items-center'>
                     <button
-                      onClick={(e) => handleRemoveCart(e, item.id)}
+                      onClick={(e) => handleRemoveCart(e, item)}
                       className='bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white'
                     >
                       <img className='w-5 h-5' src={Delete} alt='delete' />
